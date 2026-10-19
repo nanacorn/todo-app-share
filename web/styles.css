@@ -17,6 +17,11 @@ button { cursor: pointer; }
 button, input { -webkit-tap-highlight-color: transparent; }
 button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 3px solid var(--skin-muted); outline-offset: 3px; }
 button { color: inherit; }
+.ui-icon { display: block; width: 16px; height: 16px; flex-shrink: 0; shape-rendering: geometricPrecision; }
+.sidebar-add > span[aria-hidden="true"] { display: grid; place-items: center; flex: 0 0 16px; height: 24px; }
+.project-symbol { display: grid; place-items: center; flex: 0 0 16px; }
+.subtask-add { display: inline-flex; align-items: center; justify-content: center; gap: 4px; }
+#back-to-projects { display: inline-flex; align-items: center; gap: 6px; }
 [hidden] { display: none !important; }
 .app-shell { position: relative; z-index: 1; min-height: 100dvh; display: grid; grid-template-columns: 288px minmax(0, 1fr); background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); }
 .has-background-image .app-shell { background: transparent; }

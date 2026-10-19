@@ -559,6 +559,11 @@ button { cursor: pointer; }
 button, input { -webkit-tap-highlight-color: transparent; }
 button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 3px solid var(--skin-muted); outline-offset: 3px; }
 button { color: inherit; }
+.ui-icon { display: block; width: 16px; height: 16px; flex-shrink: 0; shape-rendering: geometricPrecision; }
+.sidebar-add > span[aria-hidden="true"] { display: grid; place-items: center; flex: 0 0 16px; height: 24px; }
+.project-symbol { display: grid; place-items: center; flex: 0 0 16px; }
+.subtask-add { display: inline-flex; align-items: center; justify-content: center; gap: 4px; }
+#back-to-projects { display: inline-flex; align-items: center; gap: 6px; }
 [hidden] { display: none !important; }
 .app-shell { position: relative; z-index: 1; min-height: 100dvh; display: grid; grid-template-columns: 288px minmax(0, 1fr); background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); }
 .has-background-image .app-shell { background: transparent; }
@@ -1101,15 +1106,18 @@ function paletteFromImage(image) {
 
 ## 부록 E. 보조 SVG 아이콘
 
-기본 연필·설정·삭제·이동·보관·복원 아이콘의 크기와 선 두께를 유지한다. 접기 아이콘은 9절을 사용한다.
+연필·설정·삭제·보관·복원·추가·닫기·뒤로가기·프로젝트 기호는 공통 16×16 전용 벡터이며 선 두께 1.5px, 둥근 선 끝·모서리로 통일한다. 이동 핸들은 같은 16×16 안에 6개의 점을 채운다. 같은 동작에는 화면 위치와 관계없이 같은 SVG를 사용한다. 추가 버튼과 모바일 뒤로가기의 글자 기호도 이 SVG로 교체한다. 섹션 접기 아이콘은 9절의 기존 모양과 완료 동그라미를 유지한다.
 
 ```js
-const brandPencil = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10.5 2.5a2.12 2.12 0 0 1 3 3L6 13l-3.5.5L3 10Z"/><path d="m9.5 3.5 3 3"/></svg>';
-  const brandGear = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6.649 1.642L9.351 1.642L9.545 3.245L11.346 4.284L12.83 3.651L14.182 5.991L12.891 6.96L12.891 9.04L14.182 10.009L12.83 12.349L11.346 11.716L9.545 12.755L9.351 14.358L6.649 14.358L6.455 12.755L4.654 11.716L3.17 12.349L1.818 10.009L3.109 9.04L3.109 6.96L1.818 5.991L3.17 3.651L4.654 4.284L6.455 3.245Z"/><circle cx="8" cy="8" r="2.25"/></svg>';
-const pencil = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5 4 4M4 20l4-1L20 7a2.8 2.8 0 0 0-4-4L4 15l-1 6Z"/></svg>';
-const gear = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 3-1 3-3 1-2 4 2 2v3l3 2 1 3h5l1-3 3-2v-3l2-2-2-4-3-1-1-3Z"/><circle cx="11.5" cy="12" r="3"/></svg>';
-const trash = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></svg>';
-const grip = '<svg width="14" height="18" viewBox="0 0 16 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="5" r="1.5"/><circle cx="11" cy="5" r="1.5"/><circle cx="5" cy="12" r="1.5"/><circle cx="11" cy="12" r="1.5"/><circle cx="5" cy="19" r="1.5"/><circle cx="11" cy="19" r="1.5"/></svg>';
-const archiveIcon = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3h18v5H3zM5 8v13h14V8M9 12h6"/></svg>';
-const restoreIcon = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10a8 8 0 1 1 1 9M4 4v6h6"/></svg>';
+const iconSvg = (body, filled = false) => '<svg class="ui-icon" width="16" height="16" viewBox="0 0 16 16" fill="' + (filled ? 'currentColor' : 'none') + '" stroke="' + (filled ? 'none' : 'currentColor') + '" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' + body + '</svg>';
+  const pencil = iconSvg('<path d="M10.5 2.5a2.12 2.12 0 0 1 3 3L6 13l-3.5.5L3 10Z"/><path d="m9.5 3.5 3 3"/>');
+  const gear = iconSvg('<path d="M6.649 1.642L9.351 1.642L9.545 3.245L11.346 4.284L12.83 3.651L14.182 5.991L12.891 6.96L12.891 9.04L14.182 10.009L12.83 12.349L11.346 11.716L9.545 12.755L9.351 14.358L6.649 14.358L6.455 12.755L4.654 11.716L3.17 12.349L1.818 10.009L3.109 9.04L3.109 6.96L1.818 5.991L3.17 3.651L4.654 4.284L6.455 3.245Z"/><circle cx="8" cy="8" r="2.25"/>');
+  const trash = iconSvg('<path d="M2.5 4.5h11M6 4.5v-2h4v2M4 4.5l.5 8a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1l.5-8M6.5 7v4M9.5 7v4"/>');
+  const grip = iconSvg('<circle cx="5.5" cy="3.5" r="1"/><circle cx="10.5" cy="3.5" r="1"/><circle cx="5.5" cy="8" r="1"/><circle cx="10.5" cy="8" r="1"/><circle cx="5.5" cy="12.5" r="1"/><circle cx="10.5" cy="12.5" r="1"/>', true);
+  const archiveIcon = iconSvg('<rect x="2.5" y="2.5" width="11" height="3" rx=".75"/><path d="M3.5 5.5v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1v-7M6.5 8.5h3"/>');
+  const restoreIcon = iconSvg('<path d="M2.5 7.25A5.5 5.5 0 1 1 4.1 12M2.5 3v4.25h4.25"/>');
+  const plusIcon = iconSvg('<path d="M8 3v10M3 8h10"/>');
+  const closeIcon = iconSvg('<path d="m4 4 8 8M12 4l-8 8"/>');
+  const backIcon = iconSvg('<path d="M13 8H3m5-5L3 8l5 5"/>');
+  const projectIcon = iconSvg('<path d="M6.25 2.5 4.75 13.5M11.25 2.5 9.75 13.5M3 5.75h10M2.5 10.25h10"/>');
 ```
