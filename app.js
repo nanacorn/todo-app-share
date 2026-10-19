@@ -17,12 +17,12 @@
   const defaultTheme = Object.freeze({ start: '#fff8cf', end: '#fffdf6', accent: '#ffda75' });
   const themePresets = Object.freeze([
     { name: '노란 계열', ...defaultTheme },
-    { name: '빨간 계열', start: '#fff0f0', end: '#ffffff', accent: '#ffc4c4' },
-    { name: '초록 계열', start: '#effff7', end: '#ffffff', accent: '#baebd7' },
-    { name: '핑크 계열', start: '#fff0f8', end: '#ffffff', accent: '#ffd0e8' },
-    { name: '블루 계열', start: '#eef9ff', end: '#ffffff', accent: '#c6e7ff' },
-    { name: '보라 계열', start: '#f5f0ff', end: '#ffffff', accent: '#deceff' },
-    { name: '그레이 계열', start: '#f2f5f9', end: '#ffffff', accent: '#e6eaf0' }
+    { name: '빨간 계열', start: '#ffcccc', end: '#fff8f8', accent: '#ffc4c4', swatchStart: '#fff0f0' },
+    { name: '초록 계열', start: '#cffff0', end: '#f7fffb', accent: '#baebd7', swatchStart: '#effff7' },
+    { name: '핑크 계열', start: '#ffceea', end: '#fff7fb', accent: '#ffd0e8', swatchStart: '#fff0f8' },
+    { name: '블루 계열', start: '#cfeaff', end: '#f7fcff', accent: '#c6e7ff', swatchStart: '#eef9ff' },
+    { name: '보라 계열', start: '#e3d1ff', end: '#fcf8ff', accent: '#deceff', swatchStart: '#f5f0ff' },
+    { name: '그레이 계열', start: '#d0d9e5', end: '#f7f9fc', accent: '#e6eaf0', swatchStart: '#f2f5f9' }
   ]);
   const validColor = (color) => typeof color === 'string' && /^#[0-9a-f]{6}$/i.test(color);
   const makeSection = (name) => ({ id: uid(), name, tasks: [] });
@@ -239,7 +239,7 @@
       button.className = 'theme-dot';
       button.title = preset.name;
       button.setAttribute('aria-label', `${preset.name} 테마`);
-      button.style.setProperty('--preset-start', preset.start);
+      button.style.setProperty('--preset-start', preset.swatchStart || preset.start);
       button.style.setProperty('--preset-accent', preset.accent);
       button.addEventListener('click', () => {
         const next = { theme: { start: preset.start, end: preset.end, accent: preset.accent }, backgroundMode: settingsAppearance().backgroundMode };
