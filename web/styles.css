@@ -30,6 +30,13 @@ button { color: inherit; }
 .brand-actions { display: flex; align-items: center; padding-top: 3px; }
 .mobile-project-settings { display: none !important; }
 .brand-text { font-size: 15px; line-height: 1.5; letter-spacing: -.025em; word-break: keep-all; overflow-wrap: anywhere; min-width: 0; padding-top: calc((34px - 1.5em) / 2); }
+.brand-text { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+.brand-text.has-line-break { display: block; }
+.brand-name-line { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.brand-name-input { display: block; width: 100%; min-height: 72px; padding: 10px 12px; border: 1px solid var(--skin-border); border-radius: 8px; background: #fff; color: var(--skin-ink); font-size: 16px; line-height: 1.5; resize: none; }
+.brand-name-input:focus-visible { outline: 3px solid var(--skin-muted); outline-offset: 3px; }
+.brand-name-help { margin-top: 8px; }
+:root[data-color-mode="dark"] .brand-name-input { background: #15191f; border-color: var(--skin-border); }
 .brand-mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 12px; background: linear-gradient(135deg, var(--accent-light), var(--accent-light)); font-size: 22px; color: var(--skin-ink); box-shadow: 0 4px 12px #44382015; }
 .brand-mark.has-logo { background: transparent; box-shadow: none; border-radius: 50%; overflow: hidden; }
 .brand-mark img { width: 34px; height: 34px; object-fit: cover; border-radius: 50%; }

@@ -189,7 +189,7 @@
 - 한 줄 문구는 34px 로고와 세로 중앙을 맞춘다. 두 줄 이상이면 로고는 위에 고정하고 첫 줄 중심에 맞추며 문구만 아래로 늘어난다. 텍스트 상단 여백은 `(34px - 1.5em) / 2`, 28px 버튼 영역의 상단 여백은 3px이다. 폰트 로드·창 크기·문구 변경에도 CSS로 같은 기준을 유지한다.
 - 기본 마크는 34 × 34px, 둥근 모서리 12px의 체크 표시다.
 - 업로드 로고는 34 × 34px 정원, `object-fit: cover`로 자른다. 설정 미리보기는 64 × 64px 정원이다.
-- 브랜드 문구 옆 작은 연필 오른쪽에 전체 설정 아이콘을 둔다. 앱 이름은 최대 80자다.
+- 브랜드 문구 옆 작은 연필 오른쪽에 전체 설정 아이콘을 둔다. 앱 이름은 줄바꿈을 포함해 최대 80자·2줄이다. 연필 편집과 전체 설정 모두 2행 textarea를 사용하고, Enter는 줄바꿈이다. 세 번째 줄 입력을 막고, 3줄 이상 붙여넣은 값은 저장할 수 없도록 안내한다. 직접 지정한 두 줄은 각각 한 행으로 표시하고 긴 행은 말줄임한다. 직접 줄바꿈이 없는 이름은 자연스럽게 줄바꿈하되 두 줄까지만 표시한다. 원문은 title에 유지하며 브라우저 탭 제목에서는 줄바꿈을 공백으로 바꾼다.
 - 프로젝트 목록의 각 항목은 이동 핸들 → 프로젝트 이름 → 보관 → 삭제 순서다.
 - 선택 프로젝트는 부드러운 100도 강조색 그라데이션, 1px 테두리, 글자 굵기 700이다.
 - `+ 프로젝트 추가` 아래에 제작·이식 프로젝트 추가 버튼을 각각 독립된 행으로 둔다. 드롭다운으로 합치지 않는다.
@@ -217,9 +217,96 @@
 접기 SVG:
 
 ```html
-<svg width="16" height="16" fill="none" viewBox="0 0 16 16" aria-hidden="true">
-  <path fill="currentColor" d="M11.646 5.647a.5.5 0 0 1 .708.707l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 1 1 .708-.707L8 9.294z"/>
-</svg>
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#fff6c5">
+    <title>My Todo List · 내 할 일</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-background" aria-hidden="true"></div>
+    <div class="app-shell" data-mobile-screen="tasks">
+      <aside class="sidebar" aria-label="프로젝트">
+        <div class="brand-row"><div class="brand"><span class="brand-mark" id="brand-mark" aria-hidden="true"><span id="brand-default">✓</span><img id="brand-image" alt="" hidden></span><span class="brand-text" id="brand-text">My Todo List</span><div class="brand-actions"><button class="edit-button brand-edit" id="edit-brand" type="button" aria-label="로고 문구 수정" title="로고 문구 수정"></button><button class="settings-button" id="open-settings" type="button" aria-label="설정" title="설정"></button></div></div></div>
+        <button class="settings-button mobile-project-settings" id="project-list-settings" type="button" aria-label="설정" title="설정"></button>
+        <div class="sidebar-heading"><h2 id="projects-heading" tabindex="-1">내 프로젝트</h2><button class="icon-button" id="new-project" type="button" aria-label="프로젝트 추가">+</button></div>
+        <nav id="project-list" aria-label="프로젝트 목록"></nav>
+        <details class="project-archive" id="project-archive" hidden><summary id="project-archive-summary">보관 프로젝트</summary><div id="archived-project-list" aria-label="보관 프로젝트 목록"></div></details>
+        <form id="project-form" class="name-form" hidden novalidate>
+          <label class="field-label" id="project-form-label" for="project-name">프로젝트 이름</label>
+          <input id="project-name" maxlength="80" placeholder="프로젝트 이름" autocomplete="off" required>
+          <div class="form-actions"><button class="button quiet" id="cancel-project" type="button">취소</button><button class="button primary" type="submit">추가</button></div>
+        </form>
+        <button class="sidebar-add" id="add-project" type="button"><span aria-hidden="true">+</span> 프로젝트 추가</button>
+        <div class="template-row"><button class="sidebar-add template-add" id="add-templateA-project" type="button"><span aria-hidden="true">+</span> 제작 프로젝트 추가</button><button class="edit-button" id="edit-templateA-template" type="button" aria-label="제작 템플릿 수정" title="제작 템플릿 수정"></button></div>
+        <div class="template-row"><button class="sidebar-add template-add" id="add-templateB-project" type="button"><span aria-hidden="true">+</span> 이식 프로젝트 추가</button><button class="edit-button" id="edit-templateB-template" type="button" aria-label="이식 템플릿 수정" title="이식 템플릿 수정"></button></div>
+      </aside>
+      <main class="workspace">
+        <div class="content">
+          <div class="mobile-toolbar"><button class="button quiet" id="back-to-projects" type="button">← 프로젝트 목록</button><button class="settings-button" id="mobile-settings" type="button" aria-label="설정" title="설정"></button></div>
+          <div class="template-editor-bar" id="template-editor-bar" hidden><p>섹션과 하위 할 일을 편집한 뒤 저장하세요.</p><div class="form-actions"><button class="button quiet" id="cancel-template" type="button">취소</button><button class="button primary" id="save-template" type="button">템플릿 저장</button></div></div>
+          <header class="project-header"><div class="project-heading"><p class="eyebrow">MY PROJECT</p><div class="title-row"><h1 id="project-title"></h1><button class="edit-button" id="edit-project" type="button" aria-label="프로젝트 이름 수정"></button><button class="edit-button project-settings-button" id="project-settings" type="button" aria-label="프로젝트 배경 및 테마 설정" title="프로젝트 배경 및 테마 설정"></button></div></div><button class="button section-button" id="new-section" type="button"><span aria-hidden="true">+</span> 섹션 추가</button></header>
+          <form id="section-form" class="name-form section-form" hidden>
+            <label class="sr-only" for="section-name">섹션 이름</label>
+            <input id="section-name" maxlength="80" placeholder="섹션 이름" autocomplete="off" required>
+            <div class="form-actions"><button class="button quiet" id="cancel-section" type="button">취소</button><button class="button primary" type="submit">추가</button></div>
+          </form>
+          <div id="sections"></div>
+          <p class="empty-projects field-help" id="empty-projects" hidden>프로젝트를 추가하거나 보관한 프로젝트를 다시 꺼내 주세요.</p>
+          <div id="all-archives"></div>
+          <p id="action-message" class="field-help" role="status" hidden></p>
+          <p id="save-message" class="save-message" role="status" hidden></p>
+        </div>
+      </main>
+    </div>
+    <dialog id="edit-dialog" aria-labelledby="edit-title">
+      <form id="edit-form" class="dialog-content">
+        <h2 id="edit-title"></h2>
+        <label class="field-label" id="edit-label" for="edit-value"></label>
+        <input id="edit-value" autocomplete="off" required>
+        <textarea class="brand-name-input" id="edit-brand-value" rows="2" maxlength="80" aria-describedby="edit-brand-help" required hidden disabled></textarea>
+        <p class="field-help brand-name-help" id="edit-brand-help" hidden>Enter로 줄바꿈할 수 있어요. 최대 2줄 · 80자</p>
+        <div class="form-actions"><button class="button quiet" id="cancel-edit" type="button">취소</button><button class="button primary" type="submit">저장</button></div>
+      </form>
+    </dialog>
+    <dialog id="delete-dialog" aria-labelledby="delete-title"><div class="dialog-content"><h2 id="delete-title">삭제</h2><p id="delete-description" class="field-help"></p><div class="form-actions"><button class="button quiet" id="cancel-delete" type="button">취소</button><button class="button danger" id="confirm-delete" type="button">삭제</button></div></div></dialog>
+    <dialog id="settings-dialog" aria-labelledby="settings-title">
+      <div class="dialog-content">
+        <div class="dialog-heading"><h2 id="settings-title">설정</h2><button class="icon-button" id="close-settings" type="button" aria-label="설정 닫기">×</button></div>
+        <p class="settings-caption" id="settings-caption">이미지와 색을 고르면 바로 적용되고 저장돼요.</p>
+        <fieldset id="color-mode-settings"><legend>화면 모드</legend>
+          <div class="color-mode-options"><label id="color-mode-inherit-option" class="color-mode-inherit" hidden><input type="radio" name="color-mode" id="color-mode-inherit" value="inherit"> 전체 설정 따르기</label><label><input type="radio" name="color-mode" id="color-mode-light" value="light"> 라이트</label><label><input type="radio" name="color-mode" id="color-mode-dark" value="dark"> 다크</label></div>
+          <p id="color-mode-help" class="color-mode-help field-help">별도 화면 모드를 지정하지 않은 프로젝트에 적용되고, PC와 모바일에 함께 저장돼요.</p>
+        </fieldset>
+        <div id="project-appearance-controls" class="project-appearance-controls" hidden><p id="project-appearance-status" class="field-help"></p><button class="button quiet" id="reset-project-appearance" type="button">전체 기본 테마 사용</button></div>
+        <fieldset class="logo-settings" id="logo-settings"><legend>로고</legend>
+          <p class="field-help">문구 왼쪽의 로고를 원하는 이미지로 바꿀 수 있어요.</p>
+          <img id="logo-preview" class="logo-preview" alt="선택한 로고" hidden>
+          <input id="logo-image-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
+          <div class="image-actions"><button class="button quiet" id="choose-logo" type="button">로고 이미지 선택</button><button class="button quiet" id="remove-logo" type="button" hidden>기본 로고로</button></div>
+          <label class="field-label" for="brand-name-setting">로고 문구</label><textarea class="brand-name-input" id="brand-name-setting" rows="2" maxlength="80" aria-describedby="brand-name-help" required></textarea><p class="field-help brand-name-help" id="brand-name-help">Enter로 줄바꿈할 수 있어요. 최대 2줄 · 80자</p><button class="button quiet brand-save" id="save-brand-name" type="button">문구 저장</button>
+          <p id="logo-message" class="field-help" role="status" hidden></p>
+        </fieldset>
+        <fieldset><legend>배경 방식</legend><div class="background-options"><label><input type="radio" name="background-mode" id="background-color-mode" value="color"> 색상 테마</label><label><input type="radio" name="background-mode" id="background-image-mode" value="image"> 이미지 배경</label></div></fieldset>
+        <fieldset id="theme-presets-field"><legend>추천 색상</legend><div class="theme-presets" id="theme-presets" role="group" aria-label="추천 색상"></div></fieldset>
+        <fieldset class="image-settings"><legend>전체 배경 이미지</legend>
+          <p class="field-help">화면 전체를 채우고, 이미지의 주요 색에 맞춰 스킨 색이 바뀌어요. 메뉴와 글씨 뒤에는 화면 모드에 맞는 그라데이션을 더해요.</p>
+          <img id="image-preview" class="image-preview" alt="선택한 전체 배경 이미지" hidden>
+          <p id="image-name" class="image-name" hidden></p>
+          <input id="sidebar-image-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
+          <div class="image-actions"><button class="button primary" id="choose-image" type="button">이미지 선택</button><button class="button quiet" id="remove-image" type="button" hidden>이미지 제거</button></div>
+          <p id="image-message" class="field-help" role="status" hidden></p>
+        </fieldset>
+        <fieldset><legend>배경 그라데이션</legend><div class="color-fields"><label for="gradient-start">시작 색<input id="gradient-start" type="color"></label><label for="gradient-end">끝 색<input id="gradient-end" type="color"></label></div></fieldset>
+        <fieldset><legend>강조색</legend><div class="color-fields"><label for="accent-color">버튼과 체크 색<input id="accent-color" type="color"></label></div></fieldset>
+      </div>
+    </dialog>
+  </body>
+</html>
 ```
 
 ## 10. 할 일 행과 제자리 수정
@@ -482,6 +569,13 @@ button { color: inherit; }
 .brand-actions { display: flex; align-items: center; padding-top: 3px; }
 .mobile-project-settings { display: none !important; }
 .brand-text { font-size: 15px; line-height: 1.5; letter-spacing: -.025em; word-break: keep-all; overflow-wrap: anywhere; min-width: 0; padding-top: calc((34px - 1.5em) / 2); }
+.brand-text { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+.brand-text.has-line-break { display: block; }
+.brand-name-line { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.brand-name-input { display: block; width: 100%; min-height: 72px; padding: 10px 12px; border: 1px solid var(--skin-border); border-radius: 8px; background: #fff; color: var(--skin-ink); font-size: 16px; line-height: 1.5; resize: none; }
+.brand-name-input:focus-visible { outline: 3px solid var(--skin-muted); outline-offset: 3px; }
+.brand-name-help { margin-top: 8px; }
+:root[data-color-mode="dark"] .brand-name-input { background: #15191f; border-color: var(--skin-border); }
 .brand-mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 12px; background: linear-gradient(135deg, var(--accent-light), var(--accent-light)); font-size: 22px; color: var(--skin-ink); box-shadow: 0 4px 12px #44382015; }
 .brand-mark.has-logo { background: transparent; box-shadow: none; border-radius: 50%; overflow: hidden; }
 .brand-mark img { width: 34px; height: 34px; object-fit: cover; border-radius: 50%; }

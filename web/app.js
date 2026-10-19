@@ -449,11 +449,20 @@
     editTrigger = trigger;
     el('edit-title').textContent = title;
     el('edit-label').textContent = label;
-    el('edit-value').maxLength = property === 'text' ? 500 : 80;
-    el('edit-value').value = target[property];
+    const brand = property === 'brandName';
+    const input = el(brand ? 'edit-brand-value' : 'edit-value');
+    el('edit-value').hidden = brand;
+    el('edit-value').disabled = brand;
+    el('edit-brand-value').hidden = !brand;
+    el('edit-brand-value').disabled = !brand;
+    el('edit-brand-help').hidden = !brand;
+    el('edit-label').htmlFor = input.id;
+    input.maxLength = property === 'text' ? 500 : 80;
+    input.value = target[property];
+    input.setCustomValidity('');
     el('edit-dialog').showModal();
-    el('edit-value').focus();
-    el('edit-value').select();
+    input.focus();
+    input.select();
   }
   function editButton(label, handler) {
     const button = document.createElement('button');
@@ -1057,8 +1066,18 @@
     renderProjects();
     const project = currentProject();
     el('project-title').textContent = project?.name || '내 프로젝트';
-    el('brand-text').textContent = state.brandName;
-    document.title = `${state.brandName} · ${project?.name || '내 프로젝트'}`;
+    const brand = el('brand-text');
+    const lines = state.brandName.split(/\r\n?|\n/);
+    brand.classList.toggle('has-line-break', lines.length > 1);
+    if (lines.length > 1) brand.replaceChildren(...lines.slice(0, 2).map((line) => {
+      const span = document.createElement('span');
+      span.className = 'brand-name-line';
+      span.textContent = line;
+      return span;
+    }));
+    else brand.textContent = state.brandName;
+    brand.title = state.brandName;
+    document.title = state.brandName.replace(/\r\n?|\n/g, ' ') + ' · ' + (project?.name || '내 프로젝트');
     el('edit-project').setAttribute('aria-label', `${project?.name || ''} 프로젝트 이름 수정`);
     el('edit-project').hidden = Boolean(templateEditor) || !project;
     el('project-settings').hidden = Boolean(templateEditor) || !project;
@@ -1131,9 +1150,12 @@
   el('edit-dialog').addEventListener('close', () => { editTarget = null; if (editTrigger?.isConnected) editTrigger.focus({ preventScroll: true }); });
   el('edit-form').addEventListener('submit', (event) => {
     event.preventDefault();
-    const value = el('edit-value').value.trim();
-    if (!value || !editTarget) { el('edit-value').focus(); return; }
+    if (!editTarget) return;
     const { target, property } = editTarget;
+    const input = el(property === 'brandName' ? 'edit-brand-value' : 'edit-value');
+    const value = input.value.trim();
+    if (property === 'brandName' && !validateBrandInput(input)) { input.reportValidity(); return; }
+    if (!value) { input.focus(); return; }
     target[property] = value;
     if (target === state) save(); else saveContent();
     el('edit-dialog').close();
@@ -1203,8 +1225,26 @@
     try { localStorage.removeItem(LOGO_KEY); logoImage = null; applyLogo(); save(); if (cloud) await cloud.flush(); logoMessage('기본 로고로 돌아왔어요.'); el('choose-logo').focus(); }
     catch { logoMessage('로고를 제거하지 못했습니다. 다시 시도해 주세요.', true); }
   });
+  function validateBrandInput(input) {
+    input.setCustomValidity(input.value.split(/\r\n?|\n/).length > 2 ? '로고 문구는 두 줄까지 입력할 수 있어요.' : '');
+    return input.checkValidity();
+  }
+  for (const id of ['edit-brand-value', 'brand-name-setting']) {
+    const input = el(id);
+    input.addEventListener('input', () => validateBrandInput(input));
+    input.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter' || event.isComposing || event.keyCode === 229) return;
+      const remaining = input.value.slice(0, input.selectionStart) + input.value.slice(input.selectionEnd);
+      if (remaining.includes('\n')) {
+        event.preventDefault();
+        announce('로고 문구는 두 줄까지 입력할 수 있어요.');
+      }
+    });
+  }
   el('save-brand-name').addEventListener('click', () => {
-    const value = el('brand-name-setting').value.trim();
+    const input = el('brand-name-setting');
+    if (!validateBrandInput(input)) { input.reportValidity(); return; }
+    const value = input.value.trim();
     if (!value) { el('brand-name-setting').focus(); return; }
     state.brandName = value;
     if (save()) { render(); logoMessage('로고 문구를 저장했어요.'); }
