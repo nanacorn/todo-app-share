@@ -27,9 +27,9 @@ button { color: inherit; }
 .has-background-image .project-link:hover, .has-background-image .sidebar-add:hover { background: var(--accent-soft); }
 .brand-row { margin: 0 0 26px; }
 .brand { display: grid; grid-template-columns: 34px minmax(0, 1fr) 44px; align-items: start; column-gap: 12px; min-width: 0; font-weight: 800; }
-.brand-actions { display: flex; align-items: center; }
+.brand-actions { display: flex; align-items: center; padding-top: 3px; }
 .mobile-project-settings { display: none !important; }
-.brand-text { font-size: 15px; line-height: 1.5; letter-spacing: -.025em; word-break: keep-all; overflow-wrap: anywhere; min-width: 0; }
+.brand-text { font-size: 15px; line-height: 1.5; letter-spacing: -.025em; word-break: keep-all; overflow-wrap: anywhere; min-width: 0; padding-top: calc((34px - 1.5em) / 2); }
 .brand-mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 12px; background: linear-gradient(135deg, var(--accent-light), var(--accent-light)); font-size: 22px; color: var(--skin-ink); box-shadow: 0 4px 12px #44382015; }
 .brand-mark.has-logo { background: transparent; box-shadow: none; border-radius: 50%; overflow: hidden; }
 .brand-mark img { width: 34px; height: 34px; object-fit: cover; border-radius: 50%; }

@@ -169,10 +169,24 @@
 - 프로젝트를 전환하면 해당 프로젝트의 이미지·테마를 사용한다. 개별 배경 설정이 없으면 전체 기본 배경을 사용한다.
 - 업로드 중에는 관련 설정과 닫기를 잠깐 비활성화하고 진행 문구를 보여 준다. 성공·실패 후 복구한다.
 
+### 추천 색상 프리셋 (2026-10-19)
+
+노랑은 유지하고 나머지는 맑은 파스텔로 구성한다. 저장된 사용자 색상을 자동으로 바꾸지 않으며, 프리셋을 선택할 때 아래 값을 적용한다.
+
+| 계열 | 시작색 | 끝색 | 강조색 |
+| --- | --- | --- | --- |
+| 노랑 | #fff8cf | #fffdf6 | #ffda75 |
+| 빨강 | #fff0f0 | #ffffff | #ffc4c4 |
+| 초록 | #effff7 | #ffffff | #baebd7 |
+| 핑크 | #fff0f8 | #ffffff | #ffd0e8 |
+| 블루 | #eef9ff | #ffffff | #c6e7ff |
+| 보라 | #f5f0ff | #ffffff | #deceff |
+| 그레이 | #f2f5f9 | #ffffff | #e6eaf0 |
+
 ## 8. 브랜드와 프로젝트 메뉴
 
 - 브랜드는 `34px / 유동 텍스트 / 44px 버튼 영역` 3열, 열 간격 12px이다.
-- 로고와 문구는 위쪽 정렬한다. 문구가 두 줄이어도 로고가 가운데로 내려오면 안 된다.
+- 한 줄 문구는 34px 로고와 세로 중앙을 맞춘다. 두 줄 이상이면 로고는 위에 고정하고 첫 줄 중심에 맞추며 문구만 아래로 늘어난다. 텍스트 상단 여백은 `(34px - 1.5em) / 2`, 28px 버튼 영역의 상단 여백은 3px이다. 폰트 로드·창 크기·문구 변경에도 CSS로 같은 기준을 유지한다.
 - 기본 마크는 34 × 34px, 둥근 모서리 12px의 체크 표시다.
 - 업로드 로고는 34 × 34px 정원, `object-fit: cover`로 자른다. 설정 미리보기는 64 × 64px 정원이다.
 - 브랜드 문구 옆 작은 연필 오른쪽에 전체 설정 아이콘을 둔다. 앱 이름은 최대 80자다.
@@ -465,9 +479,9 @@ button { color: inherit; }
 .has-background-image .project-link:hover, .has-background-image .sidebar-add:hover { background: var(--accent-soft); }
 .brand-row { margin: 0 0 26px; }
 .brand { display: grid; grid-template-columns: 34px minmax(0, 1fr) 44px; align-items: start; column-gap: 12px; min-width: 0; font-weight: 800; }
-.brand-actions { display: flex; align-items: center; }
+.brand-actions { display: flex; align-items: center; padding-top: 3px; }
 .mobile-project-settings { display: none !important; }
-.brand-text { font-size: 15px; line-height: 1.5; letter-spacing: -.025em; word-break: keep-all; overflow-wrap: anywhere; min-width: 0; }
+.brand-text { font-size: 15px; line-height: 1.5; letter-spacing: -.025em; word-break: keep-all; overflow-wrap: anywhere; min-width: 0; padding-top: calc((34px - 1.5em) / 2); }
 .brand-mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 12px; background: linear-gradient(135deg, var(--accent-light), var(--accent-light)); font-size: 22px; color: var(--skin-ink); box-shadow: 0 4px 12px #44382015; }
 .brand-mark.has-logo { background: transparent; box-shadow: none; border-radius: 50%; overflow: hidden; }
 .brand-mark img { width: 34px; height: 34px; object-fit: cover; border-radius: 50%; }

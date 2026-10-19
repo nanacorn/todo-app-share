@@ -17,12 +17,12 @@
   const defaultTheme = Object.freeze({ start: '#fff8cf', end: '#fffdf6', accent: '#ffda75' });
   const themePresets = Object.freeze([
     { name: '노란 계열', ...defaultTheme },
-    { name: '빨간 계열', start: '#ffe8e3', end: '#fffaf8', accent: '#f3a29a' },
-    { name: '초록 계열', start: '#edf6da', end: '#fbfdf6', accent: '#b5d693' },
-    { name: '핑크 계열', start: '#ffe8f0', end: '#fffafc', accent: '#f1aecb' },
-    { name: '블루 계열', start: '#e6f2ff', end: '#f8fbff', accent: '#a5cdef' },
-    { name: '보라 계열', start: '#f0e8ff', end: '#fcfaff', accent: '#c6b0e8' },
-    { name: '그레이 계열', start: '#f0efeb', end: '#fdfcf9', accent: '#c9c8c4' }
+    { name: '빨간 계열', start: '#fff0f0', end: '#ffffff', accent: '#ffc4c4' },
+    { name: '초록 계열', start: '#effff7', end: '#ffffff', accent: '#baebd7' },
+    { name: '핑크 계열', start: '#fff0f8', end: '#ffffff', accent: '#ffd0e8' },
+    { name: '블루 계열', start: '#eef9ff', end: '#ffffff', accent: '#c6e7ff' },
+    { name: '보라 계열', start: '#f5f0ff', end: '#ffffff', accent: '#deceff' },
+    { name: '그레이 계열', start: '#f2f5f9', end: '#ffffff', accent: '#e6eaf0' }
   ]);
   const validColor = (color) => typeof color === 'string' && /^#[0-9a-f]{6}$/i.test(color);
   const makeSection = (name) => ({ id: uid(), name, tasks: [] });
