@@ -189,7 +189,7 @@
 - 한 줄 문구는 34px 로고와 세로 중앙을 맞춘다. 두 줄 이상이면 로고는 위에 고정하고 첫 줄 중심에 맞추며 문구만 아래로 늘어난다. 텍스트 상단 여백은 `(34px - 1.5em) / 2`, 28px 버튼 영역의 상단 여백은 3px이다. 폰트 로드·창 크기·문구 변경에도 CSS로 같은 기준을 유지한다.
 - 기본 마크는 34 × 34px, 둥근 모서리 12px의 체크 표시다.
 - 업로드 로고는 34 × 34px 정원, `object-fit: cover`로 자른다. 설정 미리보기는 64 × 64px 정원이다.
-- 브랜드 문구 옆 작은 연필 오른쪽에 전체 설정 아이콘을 둔다. 앱 이름은 줄바꿈을 포함해 최대 80자·2줄이다. 연필 편집과 전체 설정 모두 2행 textarea를 사용하고, Enter는 줄바꿈이다. 세 번째 줄 입력을 막고, 3줄 이상 붙여넣은 값은 저장할 수 없도록 안내한다. 직접 지정한 두 줄은 각각 한 행으로 표시하고 긴 행은 말줄임한다. 직접 줄바꿈이 없는 이름은 자연스럽게 줄바꿈하되 두 줄까지만 표시한다. 원문은 title에 유지하며 브라우저 탭 제목에서는 줄바꿈을 공백으로 바꾼다.
+- 브랜드 문구 옆 작은 연필 오른쪽에 전체 설정 아이콘을 둔다. 이 두 아이콘은 16×16 전용 SVG이며 선 두께 1.5px와 둥근 모서리를 사용한다. 설정 아이콘은 중심 (8, 8)의 대칭 6톱니와 반지름 2.25px 중심 원으로 구성한다. 버튼 크기와 정렬은 유지하고 24px 도형을 축소해서 대체하지 않는다. 앱 이름은 줄바꿈을 포함해 최대 80자·2줄이다. 연필 편집과 전체 설정 모두 2행 textarea를 사용하고, Enter는 줄바꿈이다. 세 번째 줄 입력을 막고, 3줄 이상 붙여넣은 값은 저장할 수 없도록 안내한다. 직접 지정한 두 줄은 각각 한 행으로 표시하고 긴 행은 말줄임한다. 직접 줄바꿈이 없는 이름은 자연스럽게 줄바꿈하되 두 줄까지만 표시한다. 원문은 title에 유지하며 브라우저 탭 제목에서는 줄바꿈을 공백으로 바꾼다.
 - 프로젝트 목록의 각 항목은 이동 핸들 → 프로젝트 이름 → 보관 → 삭제 순서다.
 - 선택 프로젝트는 부드러운 100도 강조색 그라데이션, 1px 테두리, 글자 굵기 700이다.
 - `+ 프로젝트 추가` 아래에 제작·이식 프로젝트 추가 버튼을 각각 독립된 행으로 둔다. 드롭다운으로 합치지 않는다.
@@ -706,7 +706,8 @@ input::placeholder { color: var(--skin-muted); opacity: .75; }
 .edit-button { display: grid; place-items: center; width: 30px; height: 30px; flex: 0 0 auto; padding: 0; border: 0; border-radius: 8px; background: transparent; color: var(--skin-muted); }
 .edit-button:hover { background: var(--accent-soft); color: var(--skin-ink); }
 .brand-edit { width: 22px; height: 28px; }
-.brand-edit svg { width: 14px; height: 14px; }
+.brand-edit svg { width: 16px; height: 16px; }
+.brand-actions svg { display: block; width: 16px; height: 16px; shape-rendering: geometricPrecision; }
 .task-label { flex: 1; min-width: 0; }
 .settings-button { display: grid; place-items: center; border: 0; border-radius: 8px; background: transparent; color: var(--skin-muted); padding: 0; width: 28px; height: 28px; }
 .brand-actions .settings-button { width: 22px; }
@@ -1089,6 +1090,8 @@ function paletteFromImage(image) {
 기본 연필·설정·삭제·이동·보관·복원 아이콘의 크기와 선 두께를 유지한다. 접기 아이콘은 9절을 사용한다.
 
 ```js
+const brandPencil = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10.5 2.5a2.12 2.12 0 0 1 3 3L6 13l-3.5.5L3 10Z"/><path d="m9.5 3.5 3 3"/></svg>';
+  const brandGear = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6.649 1.642L9.351 1.642L9.545 3.245L11.346 4.284L12.83 3.651L14.182 5.991L12.891 6.96L12.891 9.04L14.182 10.009L12.83 12.349L11.346 11.716L9.545 12.755L9.351 14.358L6.649 14.358L6.455 12.755L4.654 11.716L3.17 12.349L1.818 10.009L3.109 9.04L3.109 6.96L1.818 5.991L3.17 3.651L4.654 4.284L6.455 3.245Z"/><circle cx="8" cy="8" r="2.25"/></svg>';
 const pencil = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5 4 4M4 20l4-1L20 7a2.8 2.8 0 0 0-4-4L4 15l-1 6Z"/></svg>';
 const gear = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 3-1 3-3 1-2 4 2 2v3l3 2 1 3h5l1-3 3-2v-3l2-2-2-4-3-1-1-3Z"/><circle cx="11.5" cy="12" r="3"/></svg>';
 const trash = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></svg>';

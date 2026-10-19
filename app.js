@@ -131,6 +131,8 @@
     else el('back-to-projects').focus({ preventScroll: true });
   }
   const pencil = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5 4 4M4 20l4-1L20 7a2.8 2.8 0 0 0-4-4L4 15l-1 6Z"/></svg>';
+  const brandPencil = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10.5 2.5a2.12 2.12 0 0 1 3 3L6 13l-3.5.5L3 10Z"/><path d="m9.5 3.5 3 3"/></svg>';
+  const brandGear = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6.649 1.642L9.351 1.642L9.545 3.245L11.346 4.284L12.83 3.651L14.182 5.991L12.891 6.96L12.891 9.04L14.182 10.009L12.83 12.349L11.346 11.716L9.545 12.755L9.351 14.358L6.649 14.358L6.455 12.755L4.654 11.716L3.17 12.349L1.818 10.009L3.109 9.04L3.109 6.96L1.818 5.991L3.17 3.651L4.654 4.284L6.455 3.245Z"/><circle cx="8" cy="8" r="2.25"/></svg>';
   const gear = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 3-1 3-3 1-2 4 2 2v3l3 2 1 3h5l1-3 3-2v-3l2-2-2-4-3-1-1-3Z"/><circle cx="11.5" cy="12" r="3"/></svg>';
   const trash = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></svg>';
   const grip = '<svg width="14" height="18" viewBox="0 0 16 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="5" r="1.5"/><circle cx="11" cy="5" r="1.5"/><circle cx="5" cy="12" r="1.5"/><circle cx="11" cy="12" r="1.5"/><circle cx="5" cy="19" r="1.5"/><circle cx="11" cy="19" r="1.5"/></svg>';
@@ -1112,7 +1114,7 @@
   el('back-to-projects').addEventListener('click', () => { hideNameForm('section'); showMobileScreen('projects'); });
   el('mobile-settings').addEventListener('click', () => el('open-settings').click());
   el('project-list-settings').addEventListener('click', () => el('open-settings').click());
-  for (const id of ['open-settings', 'mobile-settings', 'project-list-settings', 'project-settings']) el(id).innerHTML = gear;
+  for (const id of ['open-settings', 'mobile-settings', 'project-list-settings', 'project-settings']) el(id).innerHTML = id === 'open-settings' ? brandGear : gear;
   document.addEventListener('pointerdown', (event) => {
     if (inlineTaskEdit && event.target !== inlineTaskEdit.input) inlineTaskEdit.finish(true, false);
   }, true);
@@ -1143,7 +1145,7 @@
   document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshExpiredArchives(); });
   window.setInterval(refreshExpiredArchives, 60000);
   el('edit-project').innerHTML = pencil;
-  el('edit-brand').innerHTML = pencil;
+  el('edit-brand').innerHTML = brandPencil;
   el('edit-brand').addEventListener('click', () => openEdit(state, 'brandName', '로고 문구 수정', '로고 문구', el('edit-brand')));
   el('edit-project').addEventListener('click', () => openEdit(currentProject(), 'name', '프로젝트 이름 수정', '프로젝트 이름', el('edit-project')));
   el('cancel-edit').addEventListener('click', () => el('edit-dialog').close());

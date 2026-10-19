@@ -167,7 +167,8 @@ input::placeholder { color: var(--skin-muted); opacity: .75; }
 .edit-button { display: grid; place-items: center; width: 30px; height: 30px; flex: 0 0 auto; padding: 0; border: 0; border-radius: 8px; background: transparent; color: var(--skin-muted); }
 .edit-button:hover { background: var(--accent-soft); color: var(--skin-ink); }
 .brand-edit { width: 22px; height: 28px; }
-.brand-edit svg { width: 14px; height: 14px; }
+.brand-edit svg { width: 16px; height: 16px; }
+.brand-actions svg { display: block; width: 16px; height: 16px; shape-rendering: geometricPrecision; }
 .task-label { flex: 1; min-width: 0; }
 .settings-button { display: grid; place-items: center; border: 0; border-radius: 8px; background: transparent; color: var(--skin-muted); padding: 0; width: 28px; height: 28px; }
 .brand-actions .settings-button { width: 22px; }
