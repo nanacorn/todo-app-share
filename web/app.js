@@ -12,7 +12,7 @@
   const ARCHIVE_DURATION = 30 * 24 * 60 * 60 * 1000;
   const el = (id) => document.getElementById(id);
   const uid = () => crypto.randomUUID();
-  const templateASections = Object.freeze(["섹션 1","섹션 2","섹션 3","섹션 4","섹션 5","섹션 6","섹션 7","섹션 8","섹션 9","섹션 10","섹션 11","섹션 12","섹션 13","섹션 14","섹션 15","섹션 16"]);
+  const templateASections = Object.freeze(["기획","메인 프롬프트 수정","이미지","시작 설정","단축어","키워드 북(로어 북)","위젯","테스트 플레이","상세 페이지","고정 댓글","모델 추천","유저 노트","페르소나 및 RP 추천","썸네일","한 줄 설명","해시태그"]);
   const templates = Object.freeze({ blank: ['할 일'], templateA: templateASections, templateB: templateASections.slice(1) });
   const defaultTheme = Object.freeze({ start: '#fff8cf', end: '#fffdf6', accent: '#ffda75' });
   const themePresets = Object.freeze([
@@ -515,7 +515,7 @@
   }
   function openProjectForm(template = 'blank') {
     projectTemplate = template;
-    const label = template === 'templateA' ? '템플릿 A 프로젝트 이름' : template === 'templateB' ? '템플릿 B 프로젝트 이름' : '프로젝트 이름';
+    const label = template === 'templateA' ? '제작 프로젝트 이름' : template === 'templateB' ? '이식 프로젝트 이름' : '프로젝트 이름';
     el('project-form-label').textContent = label;
     el('project-name').placeholder = label;
     openNameForm('project');
@@ -1035,7 +1035,7 @@
   function openTemplateEditor(key) {
     hideNameForm('project');
     hideNameForm('section');
-    templateEditor = { key, draft: { name: key === 'templateA' ? '템플릿 A' : '템플릿 B', sections: cloneSections(state.templates[key].sections) } };
+    templateEditor = { key, draft: { name: key === 'templateA' ? '제작 템플릿' : '이식 템플릿', sections: cloneSections(state.templates[key].sections) } };
     render();
     showMobileScreen('tasks');
     window.scrollTo({ top: 0 });
@@ -1087,7 +1087,7 @@
     state.templates[key] = { sections: cloneSections(draft.sections) };
     if (!save()) { state.templates[key] = previous; return; }
     closeTemplateEditor();
-    announce(`${key === 'templateA' ? '템플릿 A' : '템플릿 B'}을 저장했어요.`);
+    announce(`${key === 'templateA' ? '제작' : '이식'} 템플릿을 저장했어요.`);
   });
   el('new-section').addEventListener('click', () => openNameForm('section'));
   el('back-to-projects').addEventListener('click', () => { hideNameForm('section'); showMobileScreen('projects'); });
@@ -1234,7 +1234,7 @@
     el(`${kind}-form`).addEventListener('submit', (event) => {
       event.preventDefault();
       const enteredName = el(`${kind}-name`).value.trim();
-      const name = enteredName || (kind === 'project' && projectTemplate !== 'blank' ? projectTemplate === 'templateA' ? '템플릿 A 프로젝트' : '템플릿 B 프로젝트' : '');
+      const name = enteredName || (kind === 'project' && projectTemplate !== 'blank' ? projectTemplate === 'templateA' ? '제작 프로젝트' : '이식 프로젝트' : '');
       if (!name) { el(`${kind}-name`).focus(); return; }
       if (kind === 'project') {
         const project = makeProject(name, projectTemplate);

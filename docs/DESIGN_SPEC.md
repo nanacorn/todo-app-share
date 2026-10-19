@@ -6,7 +6,7 @@
 1. 먼저 이 문서 전체를 읽고, 부록의 CSS와 HTML 구조를 기준으로 구현한다.
 2. 보기 좋게 임의로 재설계하지 않는다. 색상, 간격, 폰트, 정렬, 투명도, 화면 전환, 수정 방식을 명세대로 재현한다.
 3. 기본 명칭은 **My Todo List**, 초기 프로젝트는 **내 할 일**, 초기 섹션은 **할 일**로 한다.
-4. 템플릿은 **템플릿 A**, **템플릿 B**라는 중립적인 이름만 사용한다. 예시 섹션명은 `섹션 1` 같은 일반 명칭을 사용한다.
+4. 템플릿은 **제작**, **이식** 이름과 아래 기본 섹션명을 유지한다. 기본 로고 문구는 My Todo List로 한다.
 5. 기존 앱이나 개인 계정에서 데이터를 가져오지 않는다. 새 저장 공간에서 시작한다.
 6. 문서에 명시되지 않은 기능을 임의로 추가하지 않는다. 검색, 날짜·마감일, 알림, 우선순위, 태그 필터, 캘린더, 통계, 협업, 결제, 시스템 자동 테마를 추가하지 않는다.
 7. 특정 프레임워크를 반드시 사용할 필요는 없다. 정적 HTML·CSS·JavaScript로 구현할 수 있다. 다른 프레임워크를 쓰더라도 DOM 구조와 스타일 결과는 유지한다.
@@ -178,7 +178,7 @@
 - 브랜드 문구 옆 작은 연필 오른쪽에 전체 설정 아이콘을 둔다. 앱 이름은 최대 80자다.
 - 프로젝트 목록의 각 항목은 이동 핸들 → 프로젝트 이름 → 보관 → 삭제 순서다.
 - 선택 프로젝트는 부드러운 100도 강조색 그라데이션, 1px 테두리, 글자 굵기 700이다.
-- `+ 프로젝트 추가` 아래에 템플릿 A와 B의 추가 버튼을 각각 독립된 행으로 둔다. 드롭다운으로 합치지 않는다.
+- `+ 프로젝트 추가` 아래에 제작·이식 프로젝트 추가 버튼을 각각 독립된 행으로 둔다. 드롭다운으로 합치지 않는다.
 - 각 템플릿 행 오른쪽에 작은 편집 연필을 둔다.
 - 보관 프로젝트는 목록 아래 접고 펼치는 영역에 모은다. 복원·삭제할 수 있다.
 - 모든 프로젝트가 없어도 새 프로젝트와 템플릿 편집을 사용할 수 있다.
@@ -276,8 +276,8 @@
 
 ### 템플릿
 
-- 템플릿 A는 기본 16개 빈 섹션, B는 기본 15개 빈 섹션이다. A의 `섹션 1`~`섹션 16`, B의 `섹션 2`~`섹션 16`으로 초기화할 수 있다.
-- 각 추가 버튼은 복제할 프로젝트 이름 입력을 연다. 이름을 비우고 추가하면 각각 `템플릿 A 프로젝트`, `템플릿 B 프로젝트`로 바로 생성한다.
+- 제작 템플릿은 다음 16개 빈 섹션으로 초기화한다: `기획`, `메인 프롬프트 수정`, `이미지`, `시작 설정`, `단축어`, `키워드 북(로어 북)`, `위젯`, `테스트 플레이`, `상세 페이지`, `고정 댓글`, `모델 추천`, `유저 노트`, `페르소나 및 RP 추천`, `썸네일`, `한 줄 설명`, `해시태그`. 이식 템플릿은 이 목록에서 첫 번째 `기획`만 제외한 15개 섹션으로 초기화한다.
+- 각 추가 버튼은 복제할 프로젝트 이름 입력을 연다. 이름을 비우고 추가하면 각각 `제작 프로젝트`, `이식 프로젝트`로 바로 생성한다.
 - 복제할 때 모든 섹션·할 일·하위 할 일에 새 UUID를 발급하고, 체크 해제·완료 시각 null로 시작한다.
 - 새 프로젝트를 수정해도 원본 템플릿이나 다른 프로젝트를 바꾸지 않는다.
 - 템플릿 편집은 초안이다. 섹션의 순서·이름·추가·삭제와 할 일·하위 할 일의 추가·수정·삭제가 가능하다.
@@ -814,8 +814,8 @@ button:disabled { cursor: wait; opacity: .6; }
           <div class="form-actions"><button class="button quiet" id="cancel-project" type="button">취소</button><button class="button primary" type="submit">추가</button></div>
         </form>
         <button class="sidebar-add" id="add-project" type="button"><span aria-hidden="true">+</span> 프로젝트 추가</button>
-        <div class="template-row"><button class="sidebar-add template-add" id="add-template-a-project" type="button"><span aria-hidden="true">+</span> 템플릿 A로 프로젝트 추가</button><button class="edit-button" id="edit-template-a-template" type="button" aria-label="템플릿 A 수정" title="템플릿 A 수정"></button></div>
-        <div class="template-row"><button class="sidebar-add template-add" id="add-template-b-project" type="button"><span aria-hidden="true">+</span> 템플릿 B로 프로젝트 추가</button><button class="edit-button" id="edit-template-b-template" type="button" aria-label="템플릿 B 수정" title="템플릿 B 수정"></button></div>
+        <div class="template-row"><button class="sidebar-add template-add" id="add-templateA-project" type="button"><span aria-hidden="true">+</span> 제작 프로젝트 추가</button><button class="edit-button" id="edit-templateA-template" type="button" aria-label="제작 템플릿 수정" title="제작 템플릿 수정"></button></div>
+        <div class="template-row"><button class="sidebar-add template-add" id="add-templateB-project" type="button"><span aria-hidden="true">+</span> 이식 프로젝트 추가</button><button class="edit-button" id="edit-templateB-template" type="button" aria-label="이식 템플릿 수정" title="이식 템플릿 수정"></button></div>
       </aside>
       <main class="workspace">
         <div class="content">
