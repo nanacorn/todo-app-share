@@ -285,7 +285,13 @@
     const settingsActive = Boolean(image) && settingsAppearance().backgroundMode === 'image';
     el('background-color-mode').checked = !settingsActive;
     el('background-image-mode').checked = settingsActive;
-    el('background-image-mode').disabled = !image;
+    el('background-image-mode').disabled = false;
+    el('background-image-settings').hidden = !settingsActive;
+    el('background-mode-help').hidden = settingsActive;
+    el('background-mode-help').textContent = image ? '이미지 배경을 선택하면 저장된 사진이 적용돼요.' : '이미지 배경을 선택하면 사진을 고를 수 있어요.';
+    el('background-gradient-settings').hidden = settingsActive;
+    el('accent-color-settings').hidden = settingsActive;
+    if (!imageBusy) el('choose-image').textContent = '이미지 변경';
     syncThemePresets();
     el('image-preview').hidden = !image;
     el('image-name').hidden = !image;
@@ -390,9 +396,10 @@
       imageBusy = false;
       el('settings-dialog').querySelectorAll('fieldset').forEach((field) => { field.disabled = false; });
       el('close-settings').disabled = false;
-      chooseButton.textContent = '이미지 선택';
       el('sidebar-image-file').value = '';
+      applySidebarImage();
       syncSettingsScope();
+      (settingsImage() && settingsAppearance().backgroundMode === 'image' ? chooseButton : el('background-image-mode')).focus({ preventScroll: true });
     }
   }
   async function removeSidebarImage() {
@@ -405,7 +412,7 @@
       try { await cloud.flush(); imageMessage('이미지를 서버에서도 삭제했어요.'); }
       catch { imageMessage('삭제 요청을 보관했어요. 연결되면 서버 파일도 삭제됩니다.', true); }
     }
-    el('choose-image').focus();
+    el('background-image-mode').focus({ preventScroll: true });
   }
   function logoMessage(message, isError = false) {
     el('logo-message').textContent = message;
@@ -1254,13 +1261,29 @@
   ['background-color-mode', 'background-image-mode'].forEach((id) => {
     el(id).addEventListener('change', (event) => {
       const image = settingsImage();
-      if (!event.target.checked || event.target.value === 'image' && !image) return;
+      if (!event.target.checked || imageBusy) return;
+      el('image-message').hidden = true;
+      if (event.target.value === 'image' && !image) {
+        // Keep the saved mode until a file is successfully uploaded.
+        // Canceling or rejecting a file leaves the current theme intact.
+        applySidebarImage();
+        el('sidebar-image-file').value = '';
+        el('sidebar-image-file').click();
+        return;
+      }
       const next = { theme: { ...settingsAppearance().theme }, backgroundMode: event.target.value };
       if (storeAppearance(next, image)) refreshAppearance();
     });
   });
   el('choose-image').addEventListener('click', () => el('sidebar-image-file').click());
-  el('sidebar-image-file').addEventListener('change', (event) => { if (event.target.files[0]) chooseSidebarImage(event.target.files[0]); });
+  el('sidebar-image-file').addEventListener('change', (event) => {
+    if (event.target.files[0]) chooseSidebarImage(event.target.files[0]);
+    else applySidebarImage();
+  });
+  el('sidebar-image-file').addEventListener('cancel', () => {
+    applySidebarImage();
+    (settingsImage() && settingsAppearance().backgroundMode === 'image' ? el('choose-image') : el('background-image-mode')).focus({ preventScroll: true });
+  });
   el('remove-image').addEventListener('click', removeSidebarImage);
   el('close-settings').addEventListener('click', () => { if (!imageBusy) el('settings-dialog').close(); });
   [['gradient-start', 'start'], ['gradient-end', 'end'], ['accent-color', 'accent']].forEach(([id, key]) => {

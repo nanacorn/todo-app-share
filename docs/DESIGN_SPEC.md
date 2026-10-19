@@ -164,6 +164,8 @@
 - 추출 HSL로 시작색 `(h, s*.7, .91)`, 끝색 `(h, s*.45, .97)`, 강조색 `(h, s, .58)`을 만든다.
 - 정확한 함수는 부록 D에 있다. 완전히 투명한 이미지처럼 색을 추출할 수 없으면 오류를 표시하고 이전 설정을 유지한다.
 - 로고는 테마색 추출에 사용하지 않는다.
+- 배경 방식은 두 칸의 세그먼트 라디오로 표시한다. 이미지가 없어도 이미지 배경을 선택할 수 있고, 선택 시 파일 선택창을 즉시 연다. 성공적으로 적용하기 전에는 저장된 배경 방식을 바꾸지 않으며 파일 선택 취소·검증 실패 시 기존 테마를 유지한다.
+- 색상 테마일 때는 추천 색상·배경 그라데이션·강조색 입력만 표시하고, 이미지 배경일 때는 미리보기·파일명·이미지 변경·삭제·자동 테마 안내만 표시한다. 오류·업로드·삭제 상태는 두 모드 모두에서 보이도록 별도 영역에 둔다.
 - 이미지와 색상 테마 사이를 전환해도 업로드한 이미지는 보존한다.
 - 이미지 제거 시 해당 이미지를 처음 적용하기 전 테마로 돌아간다. 이미지 교체 시 최초의 복원용 테마를 유지한다.
 - 프로젝트를 전환하면 해당 프로젝트의 이미지·테마를 사용한다. 개별 배경 설정이 없으면 전체 기본 배경을 사용한다.
@@ -291,18 +293,19 @@
           <label class="field-label" for="brand-name-setting">로고 문구</label><textarea class="brand-name-input" id="brand-name-setting" rows="2" maxlength="80" aria-describedby="brand-name-help" required></textarea><p class="field-help brand-name-help" id="brand-name-help">Enter로 줄바꿈할 수 있어요. 최대 2줄 · 80자</p><button class="button quiet brand-save" id="save-brand-name" type="button">문구 저장</button>
           <p id="logo-message" class="field-help" role="status" hidden></p>
         </fieldset>
-        <fieldset><legend>배경 방식</legend><div class="background-options"><label><input type="radio" name="background-mode" id="background-color-mode" value="color"> 색상 테마</label><label><input type="radio" name="background-mode" id="background-image-mode" value="image"> 이미지 배경</label></div></fieldset>
+        <fieldset><legend>배경 방식</legend><div class="background-options"><label><input type="radio" name="background-mode" id="background-color-mode" value="color"><span>색상 테마</span></label><label><input type="radio" name="background-mode" id="background-image-mode" value="image"><span>이미지 배경</span></label></div></fieldset>
         <fieldset id="theme-presets-field"><legend>추천 색상</legend><div class="theme-presets" id="theme-presets" role="group" aria-label="추천 색상"></div></fieldset>
-        <fieldset class="image-settings"><legend>전체 배경 이미지</legend>
-          <p class="field-help">화면 전체를 채우고, 이미지의 주요 색에 맞춰 스킨 색이 바뀌어요. 메뉴와 글씨 뒤에는 화면 모드에 맞는 그라데이션을 더해요.</p>
-          <img id="image-preview" class="image-preview" alt="선택한 전체 배경 이미지" hidden>
+        <p id="background-mode-help" class="field-help">이미지 배경을 선택하면 사진을 고를 수 있어요.</p>
+        <fieldset class="image-settings" id="background-image-settings" hidden><legend>배경 이미지</legend>
+          <img id="image-preview" class="image-preview" alt="선택한 배경 이미지" hidden>
           <p id="image-name" class="image-name" hidden></p>
-          <input id="sidebar-image-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
-          <div class="image-actions"><button class="button primary" id="choose-image" type="button">이미지 선택</button><button class="button quiet" id="remove-image" type="button" hidden>이미지 제거</button></div>
-          <p id="image-message" class="field-help" role="status" hidden></p>
+          <div class="image-actions"><button class="button primary" id="choose-image" type="button">이미지 변경</button><button class="button quiet" id="remove-image" type="button" hidden>삭제</button></div>
+          <p class="field-help image-description">이미지 색상에 맞춰 테마가 바뀌어요.<br>메뉴와 글씨 뒤에는 그라데이션을 더해요.</p>
         </fieldset>
-        <fieldset><legend>배경 그라데이션</legend><div class="color-fields"><label for="gradient-start">시작 색<input id="gradient-start" type="color"></label><label for="gradient-end">끝 색<input id="gradient-end" type="color"></label></div></fieldset>
-        <fieldset><legend>강조색</legend><div class="color-fields"><label for="accent-color">버튼과 체크 색<input id="accent-color" type="color"></label></div></fieldset>
+        <input id="sidebar-image-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
+        <p id="image-message" class="field-help" role="status" hidden></p>
+        <fieldset id="background-gradient-settings"><legend>배경 그라데이션</legend><div class="color-fields"><label for="gradient-start">시작 색<input id="gradient-start" type="color"></label><label for="gradient-end">끝 색<input id="gradient-end" type="color"></label></div></fieldset>
+        <fieldset id="accent-color-settings"><legend>강조색</legend><div class="color-fields"><label for="accent-color">버튼과 체크 색<input id="accent-color" type="color"></label></div></fieldset>
       </div>
     </dialog>
   </body>
@@ -759,9 +762,17 @@ input[type="color"]::-webkit-color-swatch { border: 0; border-radius: 5px; }
 .theme-dot[aria-pressed="true"]::before { outline: 2px solid var(--skin-muted); outline-offset: 3px; }
 .theme-dot:hover::before { transform: scale(1.08); }
 .brand-save { margin-top: 8px; }
-.background-options { display: flex; flex-wrap: wrap; gap: 16px; }
-.background-options label { display: flex; align-items: center; gap: 7px; min-height: 40px; font-size: 13px; }
-.background-options input { width: 18px; height: 18px; accent-color: var(--accent); }
+.background-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; border: 1px solid var(--skin-border); border-radius: 10px; background: color-mix(in srgb, var(--skin-muted) 5%, var(--skin-surface)); }
+.background-options label { position: relative; display: flex; align-items: center; justify-content: center; gap: 7px; min-height: 42px; padding: 9px 8px; border-radius: 7px; color: var(--skin-muted); font-size: 13px; font-weight: 600; cursor: pointer; }
+.background-options input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.background-options label:has(input:checked) { background: var(--accent-light); color: var(--skin-ink); box-shadow: 0 1px 3px #00000008; }
+.background-options label:has(input:checked)::before { content: '✓'; font-size: 14px; line-height: 1; }
+.background-options label:has(input:focus-visible) { outline: 2px solid var(--skin-muted); outline-offset: 2px; }
+.background-options label:has(input:disabled) { cursor: wait; opacity: .6; }
+#theme-presets-field { margin-bottom: 10px; }
+#background-mode-help { margin-bottom: 24px; }
+.image-description { margin: 12px 0 0; }
+#image-message:not([hidden]) { margin: 0 0 24px; }
 button:disabled { cursor: wait; opacity: .6; }
 @media (max-width: 700px) {
   .app-shell { display: block; }
@@ -903,7 +914,7 @@ button:disabled { cursor: wait; opacity: .6; }
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#fff8cf">
+    <meta name="theme-color" content="#fff6c5">
     <title>My Todo List · 내 할 일</title>
     <link rel="stylesheet" href="styles.css">
     <script src="app.js" defer></script>
@@ -949,6 +960,8 @@ button:disabled { cursor: wait; opacity: .6; }
         <h2 id="edit-title"></h2>
         <label class="field-label" id="edit-label" for="edit-value"></label>
         <input id="edit-value" autocomplete="off" required>
+        <textarea class="brand-name-input" id="edit-brand-value" rows="2" maxlength="80" aria-describedby="edit-brand-help" required hidden disabled></textarea>
+        <p class="field-help brand-name-help" id="edit-brand-help" hidden>Enter로 줄바꿈할 수 있어요. 최대 2줄 · 80자</p>
         <div class="form-actions"><button class="button quiet" id="cancel-edit" type="button">취소</button><button class="button primary" type="submit">저장</button></div>
       </form>
     </dialog>
@@ -967,21 +980,22 @@ button:disabled { cursor: wait; opacity: .6; }
           <img id="logo-preview" class="logo-preview" alt="선택한 로고" hidden>
           <input id="logo-image-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
           <div class="image-actions"><button class="button quiet" id="choose-logo" type="button">로고 이미지 선택</button><button class="button quiet" id="remove-logo" type="button" hidden>기본 로고로</button></div>
-          <label class="field-label" for="brand-name-setting">로고 문구</label><input id="brand-name-setting" maxlength="80" autocomplete="off"><button class="button quiet brand-save" id="save-brand-name" type="button">문구 저장</button>
+          <label class="field-label" for="brand-name-setting">로고 문구</label><textarea class="brand-name-input" id="brand-name-setting" rows="2" maxlength="80" aria-describedby="brand-name-help" required></textarea><p class="field-help brand-name-help" id="brand-name-help">Enter로 줄바꿈할 수 있어요. 최대 2줄 · 80자</p><button class="button quiet brand-save" id="save-brand-name" type="button">문구 저장</button>
           <p id="logo-message" class="field-help" role="status" hidden></p>
         </fieldset>
-        <fieldset><legend>배경 방식</legend><div class="background-options"><label><input type="radio" name="background-mode" id="background-color-mode" value="color"> 색상 테마</label><label><input type="radio" name="background-mode" id="background-image-mode" value="image"> 이미지 배경</label></div></fieldset>
+        <fieldset><legend>배경 방식</legend><div class="background-options"><label><input type="radio" name="background-mode" id="background-color-mode" value="color"><span>색상 테마</span></label><label><input type="radio" name="background-mode" id="background-image-mode" value="image"><span>이미지 배경</span></label></div></fieldset>
         <fieldset id="theme-presets-field"><legend>추천 색상</legend><div class="theme-presets" id="theme-presets" role="group" aria-label="추천 색상"></div></fieldset>
-        <fieldset class="image-settings"><legend>전체 배경 이미지</legend>
-          <p class="field-help">화면 전체를 채우고, 이미지의 주요 색에 맞춰 스킨 색이 바뀌어요. 메뉴와 글씨 뒤에는 화면 모드에 맞는 그라데이션을 더해요.</p>
-          <img id="image-preview" class="image-preview" alt="선택한 전체 배경 이미지" hidden>
+        <p id="background-mode-help" class="field-help">이미지 배경을 선택하면 사진을 고를 수 있어요.</p>
+        <fieldset class="image-settings" id="background-image-settings" hidden><legend>배경 이미지</legend>
+          <img id="image-preview" class="image-preview" alt="선택한 배경 이미지" hidden>
           <p id="image-name" class="image-name" hidden></p>
-          <input id="sidebar-image-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
-          <div class="image-actions"><button class="button primary" id="choose-image" type="button">이미지 선택</button><button class="button quiet" id="remove-image" type="button" hidden>이미지 제거</button></div>
-          <p id="image-message" class="field-help" role="status" hidden></p>
+          <div class="image-actions"><button class="button primary" id="choose-image" type="button">이미지 변경</button><button class="button quiet" id="remove-image" type="button" hidden>삭제</button></div>
+          <p class="field-help image-description">이미지 색상에 맞춰 테마가 바뀌어요.<br>메뉴와 글씨 뒤에는 그라데이션을 더해요.</p>
         </fieldset>
-        <fieldset><legend>배경 그라데이션</legend><div class="color-fields"><label for="gradient-start">시작 색<input id="gradient-start" type="color"></label><label for="gradient-end">끝 색<input id="gradient-end" type="color"></label></div></fieldset>
-        <fieldset><legend>강조색</legend><div class="color-fields"><label for="accent-color">버튼과 체크 색<input id="accent-color" type="color"></label></div></fieldset>
+        <input id="sidebar-image-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
+        <p id="image-message" class="field-help" role="status" hidden></p>
+        <fieldset id="background-gradient-settings"><legend>배경 그라데이션</legend><div class="color-fields"><label for="gradient-start">시작 색<input id="gradient-start" type="color"></label><label for="gradient-end">끝 색<input id="gradient-end" type="color"></label></div></fieldset>
+        <fieldset id="accent-color-settings"><legend>강조색</legend><div class="color-fields"><label for="accent-color">버튼과 체크 색<input id="accent-color" type="color"></label></div></fieldset>
       </div>
     </dialog>
   </body>
