@@ -199,6 +199,8 @@
 - 보관 프로젝트는 목록 아래 접고 펼치는 영역에 모은다. 복원·삭제할 수 있다.
 - 모든 프로젝트가 없어도 새 프로젝트와 템플릿 편집을 사용할 수 있다.
 
+프로젝트 제목 행은 flex gap 0으로 두고 제목 오른쪽 여백을 PC 7px·모바일 8px로 둔다. 30px(PC)·32px(모바일) 버튼 안의 16px 아이콘을 중앙에 놓아 제목→연필과 연필→설정의 SVG 사이 간격이 각각 PC 14px·모바일 16px로 같도록 한다.
+
 ## 9. 섹션 제목과 접기 버튼
 
 - 섹션 제목과 구분선의 왼쪽 좌표를 일치시킨다.
@@ -709,8 +711,8 @@ input::placeholder { color: var(--skin-muted); opacity: .75; }
 .save-message.is-error { color: #9a4b36; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 .project-heading { min-width: 0; }
-.title-row { display: flex; align-items: center; gap: 10px; }
-.title-row h1 { min-width: 0; }
+.title-row { display: flex; align-items: center; gap: 0; }
+.title-row h1 { min-width: 0; margin-right: 7px; }
 .edit-button { display: grid; place-items: center; width: 30px; height: 30px; flex: 0 0 auto; padding: 0; border: 0; border-radius: 8px; background: transparent; color: var(--skin-muted); }
 .edit-button:hover { background: var(--accent-soft); color: var(--skin-ink); }
 .brand-edit { width: 22px; height: 28px; }
@@ -825,7 +827,7 @@ button:disabled { cursor: wait; opacity: .6; }
   .section-heading > .edit-button { width: 36px; min-width: 36px; min-height: 40px; }
   .template-editor-bar { align-items: stretch; flex-direction: column; }
   .template-editor-bar .form-actions { justify-content: flex-end; }
-  .title-row { gap: 2px; }
+  .title-row h1 { margin-right: 8px; }
   .section-heading { gap: 8px; padding-bottom: 4px; margin-bottom: 4px; }
   #sections { padding-left: 32px; }
   .section-toggle { top: calc(50% - 2px); }

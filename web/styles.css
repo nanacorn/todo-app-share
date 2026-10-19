@@ -167,8 +167,8 @@ input::placeholder { color: var(--skin-muted); opacity: .75; }
 .save-message.is-error { color: #9a4b36; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 .project-heading { min-width: 0; }
-.title-row { display: flex; align-items: center; gap: 10px; }
-.title-row h1 { min-width: 0; }
+.title-row { display: flex; align-items: center; gap: 0; }
+.title-row h1 { min-width: 0; margin-right: 7px; }
 .edit-button { display: grid; place-items: center; width: 30px; height: 30px; flex: 0 0 auto; padding: 0; border: 0; border-radius: 8px; background: transparent; color: var(--skin-muted); }
 .edit-button:hover { background: var(--accent-soft); color: var(--skin-ink); }
 .brand-edit { width: 22px; height: 28px; }
@@ -283,7 +283,7 @@ button:disabled { cursor: wait; opacity: .6; }
   .section-heading > .edit-button { width: 36px; min-width: 36px; min-height: 40px; }
   .template-editor-bar { align-items: stretch; flex-direction: column; }
   .template-editor-bar .form-actions { justify-content: flex-end; }
-  .title-row { gap: 2px; }
+  .title-row h1 { margin-right: 8px; }
   .section-heading { gap: 8px; padding-bottom: 4px; margin-bottom: 4px; }
   #sections { padding-left: 32px; }
   .section-toggle { top: calc(50% - 2px); }
