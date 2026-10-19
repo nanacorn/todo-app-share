@@ -1,0 +1,17 @@
+{
+  "name": "todo-app-share",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "dev": "npm run build && wrangler dev",
+    "preview:static": "node scripts/preview-static.mjs",
+    "db:local": "wrangler d1 migrations apply DB --local",
+    "deploy": "node scripts/check-config.mjs && npm run build && wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "4.149.0"
+  },
+  "description": "Personal todo app with Cloudflare sync and portable installation guides"
+}
