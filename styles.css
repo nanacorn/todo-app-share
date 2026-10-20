@@ -238,6 +238,7 @@ input[type="color"]::-webkit-color-swatch { border: 0; border-radius: 5px; }
 .image-description { margin: 12px 0 0; }
 #image-message:not([hidden]) { margin: 0 0 24px; }
 button:disabled { cursor: wait; opacity: .6; }
+.sidebar button:disabled, #back-to-projects:disabled { cursor: default; }
 @media (max-width: 700px) {
   .app-shell { display: block; }
   .app-shell[data-mobile-screen="tasks"] .sidebar { display: none; }

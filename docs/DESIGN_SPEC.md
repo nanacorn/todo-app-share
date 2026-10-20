@@ -196,6 +196,7 @@
 - 선택 프로젝트는 부드러운 100도 강조색 그라데이션, 1px 테두리, 글자 굵기 700이다.
 - `+ 프로젝트 추가` 아래에 제작·이식 프로젝트 추가 버튼을 각각 독립된 행으로 둔다. 드롭다운으로 합치지 않는다.
 - 각 템플릿 행 오른쪽에 작은 편집 연필을 둔다.
+- 템플릿 편집 중 비활성화되는 왼쪽 메뉴와 모바일 프로젝트 목록 버튼은 기본 화살표 커서를 사용한다. 편집 잠금을 진행 중인 로딩처럼 표시하지 않는다.
 - 편집 화면에는 수정 취소 / 템플릿 저장 버튼을 둔다. 변경이 있을 때 수정 취소를 누르면 저장 / 저장 안 함 / 계속 수정의 모달을 띄운다. 저장은 저장 성공 후 닫고, 저장 안 함은 원본을 유지하며 나가고, 계속 수정·Escape는 입력을 유지한다. 변경이 없으면 안내 없이 닫는다. 아직 추가하지 않은 할 일·하위 할 일·섹션 입력도 변경 감지와 저장에 포함한다. 저장 실패 시 원본·초안·입력을 유지하며 재시도할 수 있다. 수정 중 새로고침·탭 닫기에는 브라우저 기본 이탈 경고를 사용하며 사용자 지정 문구나 자동 저장을 약속하지 않는다.
 - 보관 프로젝트는 목록 아래 접고 펼치는 영역에 모은다. 복원·삭제할 수 있다.
 - 모든 프로젝트가 없어도 새 프로젝트와 템플릿 편집을 사용할 수 있다.
@@ -784,6 +785,7 @@ input[type="color"]::-webkit-color-swatch { border: 0; border-radius: 5px; }
 .image-description { margin: 12px 0 0; }
 #image-message:not([hidden]) { margin: 0 0 24px; }
 button:disabled { cursor: wait; opacity: .6; }
+.sidebar button:disabled, #back-to-projects:disabled { cursor: default; }
 @media (max-width: 700px) {
   .app-shell { display: block; }
   .app-shell[data-mobile-screen="tasks"] .sidebar { display: none; }
