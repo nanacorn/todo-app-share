@@ -728,7 +728,7 @@
     submit.disabled = true;
     input.addEventListener('input', () => { submit.disabled = !input.value.trim(); });
     const close = (focus = true) => { form.hidden = true; add.hidden = false; form.reset(); submit.disabled = true; if (focus) add.focus(); };
-    composers.set(form, { input, close, add });
+    composers.set(form, { input, close, add, tasks });
     cancel.addEventListener('click', () => close());
     form.addEventListener('keydown', (event) => { if (event.key === 'Escape') { event.preventDefault(); close(); } });
     add.addEventListener('click', () => { add.hidden = true; form.hidden = false; input.focus(); });
@@ -867,7 +867,7 @@
       if (focus) text.focus({ preventScroll: true });
       return true;
     };
-    inlineTaskEdit = { input, finish };
+    inlineTaskEdit = { input, finish, originalText: task.text };
     text.hidden = true;
     text.after(input);
     const resize = () => { input.style.height = 'auto'; input.style.height = `${Math.max(24, input.scrollHeight)}px`; };
@@ -1056,15 +1056,66 @@
     });
     return button;
   }
+  function templateSnapshot(sections) {
+    const tasks = (items) => items.map((task) => ({ text: task.text, children: tasks(task.children || []) }));
+    return JSON.stringify(sections.map((section) => ({ name: section.name, tasks: tasks(section.tasks) })));
+  }
+  function templateHasUnsavedChanges() {
+    if (!templateEditor) return false;
+    if (templateSnapshot(templateEditor.draft.sections) !== templateEditor.snapshot) return true;
+    if (inlineTaskEdit && inlineTaskEdit.input.value.trim() && inlineTaskEdit.input.value.trim() !== inlineTaskEdit.originalText) return true;
+    if ([...composers.entries()].some(([form, { input }]) => !form.hidden && input.value.trim())) return true;
+    if (!el('section-form').hidden && el('section-name').value.trim()) return true;
+    return Boolean(el('edit-dialog').open && editTarget && editTarget.target !== state && el('edit-value').value.trim() && el('edit-value').value.trim() !== editTarget.target[editTarget.property]);
+  }
+  function warnBeforeTemplateUnload(event) {
+    if (!templateHasUnsavedChanges()) return;
+    event.preventDefault();
+    event.returnValue = '';
+  }
+  function requestTemplateExit() {
+    if (!templateEditor || (inlineTaskEdit && !inlineTaskEdit.finish(true, false))) return;
+    if (!templateHasUnsavedChanges()) { closeTemplateEditor(); return; }
+    el('template-save-error').hidden = true;
+    el('template-exit-dialog').showModal();
+    el('continue-template').focus();
+  }
+  function saveTemplateEditor() {
+    if (!templateEditor || (inlineTaskEdit && !inlineTaskEdit.finish(true, false))) return;
+    const { key, draft } = templateEditor;
+    // Include visible, unsubmitted task/subtask and section inputs without changing the draft on failure.
+    const pending = new Map([...composers.entries()].filter(([form, { input }]) => !form.hidden && input.value.trim()).map(([, { input, tasks }]) => [tasks, input.value.trim()]));
+    const copyTasks = (tasks) => {
+      const copied = tasks.map((task) => ({ ...makeTask(task.text), children: copyTasks(task.children || []) }));
+      if (pending.has(tasks)) copied.push(makeTask(pending.get(tasks)));
+      return copied;
+    };
+    const sections = draft.sections.map((section) => ({ ...makeSection(section.name), tasks: copyTasks(section.tasks) }));
+    if (!el('section-form').hidden && el('section-name').value.trim()) sections.push(makeSection(el('section-name').value.trim()));
+    const previous = state.templates[key];
+    state.templates[key] = { sections };
+    if (!save()) {
+      state.templates[key] = previous;
+      el('template-save-error').hidden = false;
+      return;
+    }
+    closeTemplateEditor();
+    announce((key === 'templateA' ? '제작' : '이식') + ' 템플릿을 저장했어요.');
+  }
   function openTemplateEditor(key) {
     hideNameForm('project');
     hideNameForm('section');
     templateEditor = { key, draft: { name: key === 'templateA' ? '제작 템플릿' : '이식 템플릿', sections: cloneSections(state.templates[key].sections) } };
+    templateEditor.snapshot = templateSnapshot(templateEditor.draft.sections);
+    window.addEventListener('beforeunload', warnBeforeTemplateUnload);
     render();
     showMobileScreen('tasks');
     window.scrollTo({ top: 0 });
   }
   function closeTemplateEditor() {
+    inlineTaskEdit?.finish(false, false);
+    window.removeEventListener('beforeunload', warnBeforeTemplateUnload);
+    if (el('template-exit-dialog').open) el('template-exit-dialog').close();
     templateEditor = null;
     hideNameForm('section');
     render();
@@ -1114,15 +1165,12 @@
   el('edit-templateB-template').innerHTML = pencil;
   el('edit-templateA-template').addEventListener('click', () => openTemplateEditor('templateA'));
   el('edit-templateB-template').addEventListener('click', () => openTemplateEditor('templateB'));
-  el('cancel-template').addEventListener('click', closeTemplateEditor);
-  el('save-template').addEventListener('click', () => {
-    const { key, draft } = templateEditor;
-    const previous = state.templates[key];
-    state.templates[key] = { sections: cloneSections(draft.sections) };
-    if (!save()) { state.templates[key] = previous; return; }
-    closeTemplateEditor();
-    announce(`${key === 'templateA' ? '제작' : '이식'} 템플릿을 저장했어요.`);
-  });
+  el('cancel-template').addEventListener('click', requestTemplateExit);
+  el('save-template').addEventListener('click', saveTemplateEditor);
+  el('continue-template').addEventListener('click', () => el('template-exit-dialog').close());
+  el('discard-template').addEventListener('click', closeTemplateEditor);
+  el('confirm-save-template').addEventListener('click', saveTemplateEditor);
+  el('template-exit-dialog').addEventListener('close', () => { if (templateEditor) el('cancel-template').focus({ preventScroll: true }); });
   el('new-section').addEventListener('click', () => openNameForm('section'));
   el('back-to-projects').addEventListener('click', () => { hideNameForm('section'); showMobileScreen('projects'); });
   el('mobile-settings').addEventListener('click', () => el('open-settings').click());

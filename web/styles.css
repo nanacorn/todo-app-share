@@ -203,6 +203,7 @@ dialog::backdrop { background: #35302540; }
 .dialog-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .dialog-content input:not([type="color"]):not([type="file"]):not([type="radio"]) { width: 100%; min-height: 46px; padding: 11px 12px; border: 1px solid var(--skin-border); border-radius: 8px; background: #fff; color: var(--skin-ink); font-size: 16px; }
 .dialog-content .form-actions { margin-top: 22px; }
+.template-exit-actions { flex-wrap: wrap; }
 .settings-caption { font-size: 13px; color: var(--skin-muted); line-height: 1.6; margin: 8px 0 25px; }
 fieldset { min-width: 0; border: 0; padding: 0; margin: 0 0 24px; }
 fieldset:last-child { margin-bottom: 0; }

@@ -196,6 +196,7 @@
 - 선택 프로젝트는 부드러운 100도 강조색 그라데이션, 1px 테두리, 글자 굵기 700이다.
 - `+ 프로젝트 추가` 아래에 제작·이식 프로젝트 추가 버튼을 각각 독립된 행으로 둔다. 드롭다운으로 합치지 않는다.
 - 각 템플릿 행 오른쪽에 작은 편집 연필을 둔다.
+- 편집 화면에는 수정 취소 / 템플릿 저장 버튼을 둔다. 변경이 있을 때 수정 취소를 누르면 저장 / 저장 안 함 / 계속 수정의 모달을 띄운다. 저장은 저장 성공 후 닫고, 저장 안 함은 원본을 유지하며 나가고, 계속 수정·Escape는 입력을 유지한다. 변경이 없으면 안내 없이 닫는다. 아직 추가하지 않은 할 일·하위 할 일·섹션 입력도 변경 감지와 저장에 포함한다. 저장 실패 시 원본·초안·입력을 유지하며 재시도할 수 있다. 수정 중 새로고침·탭 닫기에는 브라우저 기본 이탈 경고를 사용하며 사용자 지정 문구나 자동 저장을 약속하지 않는다.
 - 보관 프로젝트는 목록 아래 접고 펼치는 영역에 모은다. 복원·삭제할 수 있다.
 - 모든 프로젝트가 없어도 새 프로젝트와 템플릿 편집을 사용할 수 있다.
 
@@ -252,7 +253,7 @@
       <main class="workspace">
         <div class="content">
           <div class="mobile-toolbar"><button class="button quiet" id="back-to-projects" type="button">← 프로젝트 목록</button><button class="settings-button" id="mobile-settings" type="button" aria-label="설정" title="설정"></button></div>
-          <div class="template-editor-bar" id="template-editor-bar" hidden><p>섹션과 하위 할 일을 편집한 뒤 저장하세요.</p><div class="form-actions"><button class="button quiet" id="cancel-template" type="button">취소</button><button class="button primary" id="save-template" type="button">템플릿 저장</button></div></div>
+          <div class="template-editor-bar" id="template-editor-bar" hidden><p>섹션과 하위 할 일을 편집한 뒤 저장하세요.</p><div class="form-actions"><button class="button quiet" id="cancel-template" type="button">수정 취소</button><button class="button primary" id="save-template" type="button">템플릿 저장</button></div></div>
           <header class="project-header"><div class="project-heading"><p class="eyebrow">MY PROJECT</p><div class="title-row"><h1 id="project-title"></h1><button class="edit-button" id="edit-project" type="button" aria-label="프로젝트 이름 수정"></button><button class="edit-button project-settings-button" id="project-settings" type="button" aria-label="프로젝트 배경 및 테마 설정" title="프로젝트 배경 및 테마 설정"></button></div></div><button class="button section-button" id="new-section" type="button"><span aria-hidden="true">+</span> 섹션 추가</button></header>
           <form id="section-form" class="name-form section-form" hidden>
             <label class="sr-only" for="section-name">섹션 이름</label>
@@ -277,6 +278,7 @@
         <div class="form-actions"><button class="button quiet" id="cancel-edit" type="button">취소</button><button class="button primary" type="submit">저장</button></div>
       </form>
     </dialog>
+    <dialog id="template-exit-dialog" aria-labelledby="template-exit-title" aria-describedby="template-exit-description"><div class="dialog-content"><h2 id="template-exit-title">변경 내용을 저장하시겠습니까?</h2><p id="template-exit-description" class="field-help">수정한 템플릿이 아직 저장되지 않았어요. 저장하지 않고 나가면 변경 내용은 사라집니다.</p><p id="template-save-error" class="save-message" role="alert" hidden>저장하지 못했어요. 변경 내용은 유지되어 있으니 계속 수정한 뒤 다시 저장해 주세요.</p><div class="form-actions template-exit-actions"><button class="button quiet" id="continue-template" type="button">계속 수정</button><button class="button quiet" id="discard-template" type="button">저장 안 함</button><button class="button primary" id="confirm-save-template" type="button">저장</button></div></div></dialog>
     <dialog id="delete-dialog" aria-labelledby="delete-title"><div class="dialog-content"><h2 id="delete-title">삭제</h2><p id="delete-description" class="field-help"></p><div class="form-actions"><button class="button quiet" id="cancel-delete" type="button">취소</button><button class="button danger" id="confirm-delete" type="button">삭제</button></div></div></dialog>
     <dialog id="settings-dialog" aria-labelledby="settings-title">
       <div class="dialog-content">
@@ -747,6 +749,7 @@ dialog::backdrop { background: #35302540; }
 .dialog-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .dialog-content input:not([type="color"]):not([type="file"]):not([type="radio"]) { width: 100%; min-height: 46px; padding: 11px 12px; border: 1px solid var(--skin-border); border-radius: 8px; background: #fff; color: var(--skin-ink); font-size: 16px; }
 .dialog-content .form-actions { margin-top: 22px; }
+.template-exit-actions { flex-wrap: wrap; }
 .settings-caption { font-size: 13px; color: var(--skin-muted); line-height: 1.6; margin: 8px 0 25px; }
 fieldset { min-width: 0; border: 0; padding: 0; margin: 0 0 24px; }
 fieldset:last-child { margin-bottom: 0; }
@@ -947,7 +950,7 @@ button:disabled { cursor: wait; opacity: .6; }
       <main class="workspace">
         <div class="content">
           <div class="mobile-toolbar"><button class="button quiet" id="back-to-projects" type="button">← 프로젝트 목록</button><button class="settings-button" id="mobile-settings" type="button" aria-label="설정" title="설정"></button></div>
-          <div class="template-editor-bar" id="template-editor-bar" hidden><p>섹션과 하위 할 일을 편집한 뒤 저장하세요.</p><div class="form-actions"><button class="button quiet" id="cancel-template" type="button">취소</button><button class="button primary" id="save-template" type="button">템플릿 저장</button></div></div>
+          <div class="template-editor-bar" id="template-editor-bar" hidden><p>섹션과 하위 할 일을 편집한 뒤 저장하세요.</p><div class="form-actions"><button class="button quiet" id="cancel-template" type="button">수정 취소</button><button class="button primary" id="save-template" type="button">템플릿 저장</button></div></div>
           <header class="project-header"><div class="project-heading"><p class="eyebrow">MY PROJECT</p><div class="title-row"><h1 id="project-title"></h1><button class="edit-button" id="edit-project" type="button" aria-label="프로젝트 이름 수정"></button><button class="edit-button project-settings-button" id="project-settings" type="button" aria-label="프로젝트 배경 및 테마 설정" title="프로젝트 배경 및 테마 설정"></button></div></div><button class="button section-button" id="new-section" type="button"><span aria-hidden="true">+</span> 섹션 추가</button></header>
           <form id="section-form" class="name-form section-form" hidden>
             <label class="sr-only" for="section-name">섹션 이름</label>
@@ -972,6 +975,7 @@ button:disabled { cursor: wait; opacity: .6; }
         <div class="form-actions"><button class="button quiet" id="cancel-edit" type="button">취소</button><button class="button primary" type="submit">저장</button></div>
       </form>
     </dialog>
+    <dialog id="template-exit-dialog" aria-labelledby="template-exit-title" aria-describedby="template-exit-description"><div class="dialog-content"><h2 id="template-exit-title">변경 내용을 저장하시겠습니까?</h2><p id="template-exit-description" class="field-help">수정한 템플릿이 아직 저장되지 않았어요. 저장하지 않고 나가면 변경 내용은 사라집니다.</p><p id="template-save-error" class="save-message" role="alert" hidden>저장하지 못했어요. 변경 내용은 유지되어 있으니 계속 수정한 뒤 다시 저장해 주세요.</p><div class="form-actions template-exit-actions"><button class="button quiet" id="continue-template" type="button">계속 수정</button><button class="button quiet" id="discard-template" type="button">저장 안 함</button><button class="button primary" id="confirm-save-template" type="button">저장</button></div></div></dialog>
     <dialog id="delete-dialog" aria-labelledby="delete-title"><div class="dialog-content"><h2 id="delete-title">삭제</h2><p id="delete-description" class="field-help"></p><div class="form-actions"><button class="button quiet" id="cancel-delete" type="button">취소</button><button class="button danger" id="confirm-delete" type="button">삭제</button></div></div></dialog>
     <dialog id="settings-dialog" aria-labelledby="settings-title">
       <div class="dialog-content">
