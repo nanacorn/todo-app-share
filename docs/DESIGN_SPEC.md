@@ -230,6 +230,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#fff6c5">
     <title>My Todo List · 내 할 일</title>
+    <link rel="icon" href="favicon.ico?v=1" sizes="16x16 32x32 48x48">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg?v=1">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png?v=1" sizes="180x180">
     <link rel="stylesheet" href="styles.css">
     <script src="app.js" defer></script>
   </head>
@@ -928,6 +931,9 @@ button:disabled { cursor: wait; opacity: .6; }
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#fff6c5">
     <title>My Todo List · 내 할 일</title>
+    <link rel="icon" href="favicon.ico?v=1" sizes="16x16 32x32 48x48">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg?v=1">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png?v=1" sizes="180x180">
     <link rel="stylesheet" href="styles.css">
     <script src="app.js" defer></script>
   </head>
@@ -1129,3 +1135,7 @@ const iconSvg = (body, filled = false) => '<svg class="ui-icon" width="16" heigh
   const backIcon = iconSvg('<path d="M13 8H3m5-5L3 8l5 5"/>');
   const projectIcon = iconSvg('<path d="M6.25 2.5 4.75 13.5M11.25 2.5 9.75 13.5M3 5.75h10M2.5 10.25h10"/>');
 ```
+
+## 파비콘
+
+밝은 버터 옐로 그라데이션(`#fff4be` → `#ffd65e`)의 둥근 사각형에 짙은 체크(`#51472b`)를 사용합니다. `favicon.svg`는 64×64 벡터 원본, `favicon.ico`는 16·32·48px 브라우저용, `apple-touch-icon.png`는 180px 홈 화면용입니다. 탭에서 식별하기 쉽도록 테마와 무관하게 동일하게 유지합니다. 빌드할 때 Cloudflare의 `/todo/` 경로와 정적 `web/`에 모두 복사합니다.
